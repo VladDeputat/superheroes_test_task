@@ -1,2 +1,2 @@
-# superheros_test_task
+# superheroes_test_task
 Test task for JSN
