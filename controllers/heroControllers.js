@@ -4,6 +4,7 @@ const jimp = require("jimp");
 const path = require("path");
 
 const getAllHeroes = async (req, res, next) => {
+  const query = req.params
   try {
     const heroes = await service.getAllHeroes(query);
     res.json({
