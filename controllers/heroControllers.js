@@ -95,7 +95,7 @@ const addHero = async (req, res, next) => {
       },
     });
   } catch (error) {
-    // await fs.unlink(tempName);
+    await fs.unlink(tempName);
     next(error);
   }
 };
@@ -112,6 +112,9 @@ const deleteHero = async (req, res, next) => {
       });
     } else {
       const result = await service.deleteHero(heroId);
+       result.images.forEach(async img => {
+       await fs.unlink(img);     
+      });
       res.json({
         code: 201,
         status: "success",
