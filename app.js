@@ -32,7 +32,7 @@ app.use((err, req, res, _) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const DB_HOST = process.env.DB_HOST;
 
 mongoose
