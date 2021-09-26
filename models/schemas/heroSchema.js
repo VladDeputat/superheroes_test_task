@@ -15,23 +15,25 @@ const heroSchema = Schema({
   origin_description: {
     type: String,
     minLength: 2,
-    required: [true, "Set origin description for hero"],
+    default: "uknown origin",
   },
-  superpowers: {
-    type: [String],
+  superpower: {
+    type: String,
     minLength: 2,
-    required: [true, "Set superpowers for hero"],
+    default: "no superpower",
   },
   catch_phrase: {
     type: String,
     minLength: 2,
-    required: [true, "Set catch phrase for hero"],
+    default: "no catch phrase",
   },
-  images: {
+  image: {
     type: [String],
-    default: function () {
-      return gravatar.url(this.email, { s: 250 }, true);
-    },
+    // default: function () {
+    //   return gravatar.url(this.email, { s: 250 }, true);
+    // },
+    default:
+      "https://cdn.pixabay.com/photo/2019/12/07/21/26/boom-4680150_1280.png",
   },
 });
 

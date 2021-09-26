@@ -4,7 +4,7 @@ const jimp = require("jimp");
 const path = require("path");
 
 const getAllHeroes = async (req, res, next) => {
-  const query = req.params
+  const query = req.params;
   try {
     const heroes = await service.getAllHeroes(query);
     res.json({
@@ -47,15 +47,23 @@ const getHero = async (req, res, next) => {
 const addHero = async (req, res, next) => {
   const { body } = req;
   const nickname = body.nickname;
-  let imgName = "";
 
   try {
+    const newHero = {
+      nickname,
+      real_name: body.real_name,
+      origin_description: body.origin_description,
+      superpower: body.superpower,
+      catch_phrase: body.catch_phrase,
+      // image: body.image,
+    };
+
     if (req.file) {
       const uploadDir = path.join(process.cwd(), "public/img");
       const { path: tempName, originalname } = req.file;
-      imgName = path.join(
+      const imgName = path.join(
         uploadDir,
-        nickname + Date.now() + "." + originalname.split(".")[1]
+        nickname + Date.now() + "." + originalname.split(".").pop()
       );
       const img = await jimp.read(tempName);
       await img
@@ -65,18 +73,10 @@ const addHero = async (req, res, next) => {
           250,
           jimp.HORIZONTAL_ALIGN_CENTER || jimp.VERTICAL_ALIGN_MIDDLE
         )
-        .writeAsync(req.file.path);
+        .writeAsync(tempName);
       await fs.rename(tempName, imgName);
+      newHero.images = imgName;
     }
-
-    const newHero = {
-      nickname,
-      real_name: body.real_name,
-      origin_description: body.origin_description,
-      superpowers: body.superpowers,
-      catch_phrase: body.catch_phrase,
-      images: imgName || body.images,
-    };
 
     const hero = await service.getAllHeroes({ nickname });
     if (hero.length) {
@@ -95,7 +95,7 @@ const addHero = async (req, res, next) => {
       },
     });
   } catch (error) {
-    await fs.unlink(tempName);
+    // await fs.unlink(tempName);
     next(error);
   }
 };
@@ -112,9 +112,9 @@ const deleteHero = async (req, res, next) => {
       });
     } else {
       const result = await service.deleteHero(heroId);
-       result.images.forEach(async img => {
-       await fs.unlink(img);     
-      });
+      // result.images.forEach(async (img) => {
+      //   await fs.unlink(img);
+      // });
       res.json({
         code: 201,
         status: "success",
